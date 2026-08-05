@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>COTN — Las Noches High School — Dossier Élève</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- ÉCRAN : CHARGEMENT / INTRO                                    -->
+<!-- ============================================================ -->
+<div id="screen-boot" class="screen screen--boot active">
+  <div class="boot-mark">
+    <div class="boot-crest">COTN</div>
+    <div class="boot-title">LAS NOCHES<br>HIGH SCHOOL</div>
+    <div class="boot-sub">Votre parcours commence ici</div>
+    <div class="boot-loader"><div class="boot-loader__bar"></div></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- ÉCRAN : MENU PRINCIPAL                                        -->
+<!-- ============================================================ -->
+<div id="screen-menu" class="screen screen--menu">
+  <div class="menu-bg-grid"></div>
+  <div class="menu-panel">
+    <div class="menu-crest">COTN</div>
+    <h1 class="menu-title">Las Noches<br><span>High School</span></h1>
+    <p class="menu-tagline">« Ici, tout se mérite. Ou se vole. »</p>
+    <div class="menu-actions">
+      <button class="btn btn--primary" id="btn-new-game">Nouveau dossier</button>
+      <button class="btn btn--ghost" id="btn-continue">Continuer</button>
+      <button class="btn btn--ghost" id="btn-export">Exporter la sauvegarde</button>
+      <button class="btn btn--ghost" id="btn-import">Importer une sauvegarde</button>
+      <input type="file" id="file-import" accept="application/json" hidden>
+      <button class="btn btn--ghost" id="btn-reset">Effacer la sauvegarde</button>
+    </div>
+    <div class="menu-footer">Votre progression est sauvegardée automatiquement sur cet appareil. Pensez à exporter une copie de temps en temps, pour dormir tranquille.</div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- ÉCRAN : CRÉATION DE PERSONNAGE                                -->
+<!-- ============================================================ -->
+<div id="screen-create" class="screen screen--create">
+  <div class="create-wrap">
+    <div class="create-head">
+      <span class="eyebrow">Admission à Las Noches</span>
+      <h2>Qui êtes-vous, avant d'entrer ?</h2>
+    </div>
+
+    <div class="create-grid">
+      <div class="create-card">
+        <label class="field-label">Comment vous appelez-vous ?</label>
+        <input type="text" id="input-name" class="field-input" maxlength="18" placeholder="ex. Ayanokōji K.">
+
+        <label class="field-label">Avatar</label>
+        <div class="avatar-picker" id="avatar-picker"></div>
+
+        <label class="field-label">Vous êtes</label>
+        <div class="chip-row" id="gender-picker">
+          <button class="chip" data-gender="F">Fille</button>
+          <button class="chip" data-gender="M">Garçon</button>
+          <button class="chip" data-gender="X">Non précisé</button>
+        </div>
+      </div>
+
+      <div class="create-card">
+        <label class="field-label">Votre point fort, au départ</label>
+        <div class="specialty-grid" id="specialty-grid"></div>
+        <p class="field-hint" id="specialty-desc">Sélectionnez une spécialité pour voir sa description.</p>
+      </div>
+
+      <div class="create-card create-card--stats">
+        <label class="field-label">Répartissez vos points d'aptitude <span id="points-remaining" class="points-remaining">12</span></label>
+        <div id="stat-allocator" class="stat-allocator"></div>
+      </div>
+    </div>
+
+    <div class="create-foot">
+      <button class="btn btn--ghost" id="btn-back-menu">Retour</button>
+      <button class="btn btn--primary" id="btn-confirm-create">Entrer en classe 1-D</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- APPLICATION PRINCIPALE (jeu)                                  -->
+<!-- ============================================================ -->
+<div id="screen-app" class="screen screen--app">
+
+  <!-- Barre latérale de navigation -->
+  <nav class="app-nav" id="app-nav">
+    <div class="app-nav__brand">COTN</div>
+    <button class="navbtn active" data-view="dashboard"><span class="navbtn__ic">◈</span><span>Aujourd'hui</span></button>
+
+    <div class="app-nav__group-label">Vous</div>
+    <button class="navbtn" data-view="stats"><span class="navbtn__ic">✦</span><span>Votre dossier</span></button>
+    <button class="navbtn" data-view="inventory"><span class="navbtn__ic">◎</span><span>Affaires</span></button>
+    <button class="navbtn" data-view="planning"><span class="navbtn__ic">▦</span><span>Planning</span></button>
+
+    <div class="app-nav__group-label">Les autres</div>
+    <button class="navbtn" data-view="relations"><span class="navbtn__ic">☍</span><span>Relations</span></button>
+    <button class="navbtn" data-view="classroom"><span class="navbtn__ic">▤</span><span>Ma classe</span></button>
+
+    <div class="app-nav__group-label">L'école</div>
+    <button class="navbtn" data-view="school"><span class="navbtn__ic">⌂</span><span>Établissement</span></button>
+    <button class="navbtn" data-view="ranking"><span class="navbtn__ic">▲</span><span>Classement</span></button>
+    <button class="navbtn" data-view="journal"><span class="navbtn__ic">✎</span><span>Journal</span></button>
+
+    <button class="navbtn navbtn--danger" id="btn-menu-return"><span class="navbtn__ic">⏻</span><span>Menu</span></button>
+  </nav>
+
+  <button class="app-nav-toggle" id="app-nav-toggle">☰</button>
+  <div class="app-nav-backdrop" id="app-nav-backdrop"></div>
+
+  <!-- En-tête persistante -->
+  <header class="app-header">
+    <div class="app-header__id">
+      <div class="app-header__avatar" id="hdr-avatar"></div>
+      <div>
+        <div class="app-header__name" id="hdr-name">—</div>
+        <div class="app-header__meta" id="hdr-meta">—</div>
+      </div>
+    </div>
+    <div class="app-header__ticker">
+      <div class="ticker-item tt" data-tip="Ce que vous pouvez dépenser : boutique, corruption, stratégies d'examen.">
+        <span class="ticker-label">Points</span>
+        <span class="ticker-value" id="hdr-points">0</span>
+      </div>
+      <div class="ticker-item tt" data-tip="Ce qu'on pense de vous, élèves et professeurs confondus.">
+        <span class="ticker-label">Réputation</span>
+        <span class="ticker-value ticker-value--rep" id="hdr-reputation">0</span>
+        <span class="ticker-tier" id="hdr-reputation-tier">—</span>
+      </div>
+      <div class="ticker-item tt" data-tip="Le rang de votre classe : A domine, D est méprisée.">
+        <span class="ticker-label">Classe</span>
+        <span class="ticker-value ticker-value--class" id="hdr-class">1-D</span>
+      </div>
+      <div class="ticker-item tt" data-tip="Où vous en êtes dans l'année scolaire.">
+        <span class="ticker-label">Semaine · An</span>
+        <span class="ticker-value" id="hdr-week">1</span><span class="ticker-tier" id="hdr-year" style="display:none">1</span>
+      </div>
+    </div>
+    <button class="hdr-mute tt" id="hdr-mute" data-tip="Couper le son" aria-label="Basculer le son">🔊</button>
+  </header>
+
+  <!-- Contenu des vues -->
+  <main class="app-main" id="app-main">
+
+    <section class="view active" id="view-dashboard"></section>
+    <section class="view" id="view-stats"></section>
+    <section class="view" id="view-relations"></section>
+    <section class="view" id="view-classroom"></section>
+    <section class="view" id="view-school"></section>
+    <section class="view" id="view-inventory"></section>
+    <section class="view" id="view-planning"></section>
+    <section class="view" id="view-ranking"></section>
+    <section class="view" id="view-journal"></section>
+
+  </main>
+</div>
+
+<!-- ============================================================ -->
+<!-- MODALE générique (examens, dialogues, événements)             -->
+<!-- ============================================================ -->
+<div id="modal-root" class="modal-root"></div>
+
+<!-- Notifications toast -->
+<div id="toast-root" class="toast-root"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
